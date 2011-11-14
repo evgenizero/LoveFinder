@@ -10,14 +10,15 @@ package com.neya.love.finder.bean;
  */
 public class CustomerData {
 	private int customerId;
-	private int status;
+	private short status;
 	private String username;
+	private String password;
 	private String email;
-	private int age;
+	private short age;
 	private String country;
 	private String city;
-	private int aboutMe;
-	private int isHidden;
+	private short aboutMe;
+	private short isHidden;
 
 	/**
 	 * @param customerId
@@ -30,13 +31,14 @@ public class CustomerData {
 	 * @param aboutMe
 	 * @param isHidden
 	 */
-	public CustomerData(int customerId, int status, String username,
-			String email, int age, String country, String city, int aboutMe,
-			int isHidden) {
+	public CustomerData(int customerId, short status, String username,
+			String password, String email, short age, String country,
+			String city, short aboutMe, short isHidden) {
 		super();
 		this.customerId = customerId;
 		this.status = status;
 		this.username = username;
+		this.password = password;
 		this.email = email;
 		this.age = age;
 		this.country = country;
@@ -63,7 +65,7 @@ public class CustomerData {
 	/**
 	 * @return the status
 	 */
-	public int getStatus() {
+	public short getStatus() {
 		return status;
 	}
 
@@ -71,7 +73,7 @@ public class CustomerData {
 	 * @param status
 	 *            the status to set
 	 */
-	public void setStatus(int status) {
+	public void setStatus(short status) {
 		this.status = status;
 	}
 
@@ -88,6 +90,23 @@ public class CustomerData {
 	 */
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	/**
+	 * 
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * 
+	 * @param password
+	 *            the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	/**
@@ -108,7 +127,7 @@ public class CustomerData {
 	/**
 	 * @return the age
 	 */
-	public int getAge() {
+	public short getAge() {
 		return age;
 	}
 
@@ -116,7 +135,7 @@ public class CustomerData {
 	 * @param age
 	 *            the age to set
 	 */
-	public void setAge(int age) {
+	public void setAge(short age) {
 		this.age = age;
 	}
 
@@ -153,7 +172,7 @@ public class CustomerData {
 	/**
 	 * @return the aboutMe
 	 */
-	public int getAboutMe() {
+	public short getAboutMe() {
 		return aboutMe;
 	}
 
@@ -161,14 +180,14 @@ public class CustomerData {
 	 * @param aboutMe
 	 *            the aboutMe to set
 	 */
-	public void setAboutMe(int aboutMe) {
+	public void setAboutMe(short aboutMe) {
 		this.aboutMe = aboutMe;
 	}
 
 	/**
 	 * @return the isHidden
 	 */
-	public int getIsHidden() {
+	public short getIsHidden() {
 		return isHidden;
 	}
 
@@ -176,7 +195,7 @@ public class CustomerData {
 	 * @param isHidden
 	 *            the isHidden to set
 	 */
-	public void setIsHidden(int isHidden) {
+	public void setIsHidden(short isHidden) {
 		this.isHidden = isHidden;
 	}
 
