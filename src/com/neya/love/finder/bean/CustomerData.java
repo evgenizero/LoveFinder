@@ -1,24 +1,26 @@
 /**
- * This class represent Customer
- * 
+ * This class represent customer
+ * @author Nikolay Yanev
+ * @email yanev93@gmail.com
+ * @date 15 Nov 2011
  */
 package com.neya.love.finder.bean;
 
 /**
- * @author nyanev
+ * @author Nikolay Yanev
  * 
  */
 public class CustomerData {
 	private int customerId;
-	private short status;
+	private int status;
 	private String username;
 	private String password;
 	private String email;
-	private short age;
+	private int age;
 	private String country;
 	private String city;
-	private short aboutMe;
-	private short isHidden;
+	private int aboutMe;
+	private int isHidden;
 
 	/**
 	 * @param customerId
@@ -31,9 +33,9 @@ public class CustomerData {
 	 * @param aboutMe
 	 * @param isHidden
 	 */
-	public CustomerData(int customerId, short status, String username,
-			String password, String email, short age, String country,
-			String city, short aboutMe, short isHidden) {
+	public CustomerData(int customerId, int status, String username,
+			String password, String email, int age, String country,
+			String city, int aboutMe, int isHidden) {
 		super();
 		this.customerId = customerId;
 		this.status = status;
@@ -65,7 +67,7 @@ public class CustomerData {
 	/**
 	 * @return the status
 	 */
-	public short getStatus() {
+	public int getStatus() {
 		return status;
 	}
 
@@ -73,7 +75,7 @@ public class CustomerData {
 	 * @param status
 	 *            the status to set
 	 */
-	public void setStatus(short status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 
@@ -127,7 +129,7 @@ public class CustomerData {
 	/**
 	 * @return the age
 	 */
-	public short getAge() {
+	public int getAge() {
 		return age;
 	}
 
@@ -135,7 +137,7 @@ public class CustomerData {
 	 * @param age
 	 *            the age to set
 	 */
-	public void setAge(short age) {
+	public void setAge(int age) {
 		this.age = age;
 	}
 
@@ -172,7 +174,7 @@ public class CustomerData {
 	/**
 	 * @return the aboutMe
 	 */
-	public short getAboutMe() {
+	public int getAboutMe() {
 		return aboutMe;
 	}
 
@@ -180,14 +182,14 @@ public class CustomerData {
 	 * @param aboutMe
 	 *            the aboutMe to set
 	 */
-	public void setAboutMe(short aboutMe) {
+	public void setAboutMe(int aboutMe) {
 		this.aboutMe = aboutMe;
 	}
 
 	/**
 	 * @return the isHidden
 	 */
-	public short getIsHidden() {
+	public int getIsHidden() {
 		return isHidden;
 	}
 
@@ -195,7 +197,7 @@ public class CustomerData {
 	 * @param isHidden
 	 *            the isHidden to set
 	 */
-	public void setIsHidden(short isHidden) {
+	public void setIsHidden(int isHidden) {
 		this.isHidden = isHidden;
 	}
 
