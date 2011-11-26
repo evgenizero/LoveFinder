@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.neya.love.finder.bean.CustomerData;
+import com.neya.love.finder.services.CustomerService;
 import com.neya.love.finder.util.net.DBManager;
 import com.neya.love.finder.utils.StringUtil;
 
