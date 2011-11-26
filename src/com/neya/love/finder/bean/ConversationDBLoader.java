@@ -12,15 +12,6 @@ public class ConversationDBLoader {
 	public List<Message> loadMessages(CustomerData firstUser,
 			CustomerData secondUser) {
 		
-		//TODO some sql query for getting the messages
-		
-		//pseudo code
-		/*
-		 * while(database.hasNextMessage()) {
-		 * 		message = new Message(text, sender, receiver);
-		 * 		messageList.add(message);
-		 * }
-		 */
 		
 		return messageList;
 	}
