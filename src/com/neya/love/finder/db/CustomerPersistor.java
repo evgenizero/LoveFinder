@@ -15,8 +15,9 @@ import com.neya.love.finder.bean.CustomerData;
 import com.neya.love.finder.util.net.DBManager;
 import com.neya.love.finder.utils.StringUtil;
 
-public class CustomerPersistor {
+public class CustomerPersistor implements CustomerService {
 	private final static String TABLE = "customer";
+	private static CustomerPersistor singelton;
 
 	/**
 	 * Persist customer data to DB
@@ -29,7 +30,7 @@ public class CustomerPersistor {
 	 * @email yanev93@gmail.com
 	 */
 	@SuppressWarnings("static-access")
-	public static boolean addCustomer(CustomerData customer)
+	public boolean addCustomer(CustomerData customer)
 			throws SQLException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -76,13 +77,13 @@ public class CustomerPersistor {
 	 * 
 	 * @param customerId
 	 *            id of the customer
-	 * @return the found customer
+	 * @return the founded customer
 	 * 
 	 * @author Nikolay Yanev
 	 * @throws SQLException
 	 * @email yanev93@gmail.com
 	 */
-	public static CustomerData findById(int customerId) throws SQLException {
+	public CustomerData findById(int customerId) throws SQLException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		CustomerData customer = null;
@@ -110,7 +111,81 @@ public class CustomerPersistor {
 			closeConnection(conn, stmt);
 		}
 	}
+	
+	/**
+	 * Find customers
+	 * 
+	 * @param username
+	 *            username of the customer
+	 * @return the founded customer
+	 * 
+	 * @author Nikolay Yanev
+	 * @throws SQLException
+	 * @email yanev93@gmail.com
+	 */
+	public CustomerData findByUsername(String username) throws SQLException {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		CustomerData customer = null;
 
+		try {
+			String sql = "SELECT id, status, username, email, age, country, city, is_hidden FROM "
+					+ TABLE + " WHERE  username = ?";
+
+			conn = DBManager.getConnection();
+			stmt = conn.prepareStatement(sql);
+
+			stmt.setString(1, username);
+
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				customer = new CustomerData(rs.getInt(1), rs.getInt(2),
+						rs.getString(3), null, rs.getString(4), rs.getInt(5),
+						String.valueOf(rs.getInt(6)), String.valueOf(rs
+								.getInt(7)), 0, rs.getInt(8));
+			}
+
+			return customer;
+		} finally {
+			closeConnection(conn, stmt);
+		}
+	}
+
+	/**
+	 * Default constructor
+	 * 
+	 * @author Nikolay Yanev
+	 * @email yanev93@gmail.com
+	 */
+	private CustomerPersistor() {
+		
+	}
+	
+	/**
+	 * Create new instance of CustomerPersistor
+	 * if no instance is created
+	 * @return instance of CustomerPersistor
+	 * 
+	 * @author Nikolay Yanev
+	 * @email yanev93@gmail.com
+	 */
+	public static synchronized CustomerPersistor getInstance() {
+		if(singelton == null) {
+			singelton = new CustomerPersistor();
+		}
+		
+		return singelton;
+	}
+	
+	/**
+	 * @author Nikolay Yanev
+	 * @email yanev93@gmail.com
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		throw new CloneNotSupportedException();
+	}
+	
 	/**
 	 * @param conn
 	 * @param stmt

@@ -6,6 +6,8 @@
  */
 package com.neya.love.finder.bean;
 
+import java.security.InvalidParameterException;
+
 /**
  * @author Nikolay Yanev
  * 
@@ -61,6 +63,11 @@ public class CustomerData {
 	 *            the customerId to set
 	 */
 	public void setCustomerId(int customerId) {
+		if (customerId < 1) {
+			throw new InvalidParameterException(
+					"Customer id must be greater than 0");
+		}
+		
 		this.customerId = customerId;
 	}
 
@@ -76,6 +83,10 @@ public class CustomerData {
 	 *            the status to set
 	 */
 	public void setStatus(int status) {
+		if (status < 0) {
+			throw new InvalidParameterException("Status must be greater than 0");
+		}
+		
 		this.status = status;
 	}
 
@@ -138,6 +149,9 @@ public class CustomerData {
 	 *            the age to set
 	 */
 	public void setAge(int age) {
+		if(age < 18 && age > 70) {
+			throw new InvalidParameterException("Age of the customer must be betwen 18 and 70");
+		}
 		this.age = age;
 	}
 
