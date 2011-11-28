@@ -4,6 +4,7 @@
  * @email yanev93@gmail.com
  * @date 15 Nov 2011
  */
+
 package com.neya.love.finder.db;
 
 import java.sql.Connection;
@@ -21,6 +22,7 @@ public class CustomerPersistor implements CustomerService {
 	private final static String TABLE = "customer";
 	private static CustomerPersistor singelton;
 
+	
 	/**
 	 * Persist customer data to DB
 	 * 
