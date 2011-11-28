@@ -40,8 +40,7 @@ public class MessagePersistor implements MessageService {
 		DBManager dbManager = new DBManager();
 
 		try {
-			String sql = "INSERT INTO (message, date, senderId, receiverId) "
-					+ TABLE + " (?,?,?,?)";
+			String sql = "INSERT INTO " + TABLE + " (message, date, senderId, receiverId) VALUES (?,?,?,?)";
 
 			conn = dbManager.getConnection();
 			stmt = conn.prepareStatement(sql);

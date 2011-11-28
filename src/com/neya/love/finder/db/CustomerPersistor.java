@@ -40,8 +40,8 @@ public class CustomerPersistor implements CustomerService {
 		//DBManager dbManager = new DBManager();
 
 		try {
-			String sql = "INSERT INTO (status, username, password, email, age, country, city, is_hidden) "
-					+ TABLE + " (?,?,?,?,?,?,?,?)";
+			String sql = "INSERT INTO " + TABLE + " (status, username, password, email, age, country, city, is_hidden) " +
+					"VALUES (?,?,?,?,?,?,?,?)";
 
 			//conn = dbManager.getConnection();
 			stmt = conn.prepareStatement(sql);
