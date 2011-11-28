@@ -17,6 +17,7 @@ import com.neya.love.finder.util.net.DBManager;
 import com.neya.love.finder.utils.StringUtil;
 
 public class CustomerPersistor implements CustomerService {
+	private Connection conn = null;
 	private final static String TABLE = "customer";
 	private static CustomerPersistor singelton;
 
@@ -30,18 +31,17 @@ public class CustomerPersistor implements CustomerService {
 	 * @author Nikolay Yanev
 	 * @email yanev93@gmail.com
 	 */
-	@SuppressWarnings("static-access")
 	public boolean addCustomer(CustomerData customer)
 			throws SQLException {
-		Connection conn = null;
+		//Connection conn = null;
 		PreparedStatement stmt = null;
-		DBManager dbManager = new DBManager();
+		//DBManager dbManager = new DBManager();
 
 		try {
 			String sql = "INSERT INTO (status, username, password, email, age, country, city, is_hidden) "
 					+ TABLE + " (?,?,?,?,?,?,?,?)";
 
-			conn = dbManager.getConnection();
+			//conn = dbManager.getConnection();
 			stmt = conn.prepareStatement(sql);
 
 			stmt.setInt(1, customer.getStatus());
@@ -56,18 +56,18 @@ public class CustomerPersistor implements CustomerService {
 			stmt.setInt(8, customer.getIsHidden());
 
 			if (stmt.executeUpdate() == 1) {
-				closeConnection(conn, stmt);
+				closeConnection(stmt);
 
 				return true;
 			} else {
-				closeConnection(conn, stmt);
+				closeConnection(stmt);
 
 				return false;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			closeConnection(conn, stmt);
+			closeConnection(stmt);
 		}
 
 		return false;
@@ -85,7 +85,7 @@ public class CustomerPersistor implements CustomerService {
 	 * @email yanev93@gmail.com
 	 */
 	public CustomerData findById(int customerId) throws SQLException {
-		Connection conn = null;
+		//Connection conn = null;
 		PreparedStatement stmt = null;
 		CustomerData customer = null;
 
@@ -93,7 +93,7 @@ public class CustomerPersistor implements CustomerService {
 			String sql = "SELECT id, status, username, email, age, country, city, is_hidden FROM "
 					+ TABLE + " WHERE  id = ?";
 
-			conn = DBManager.getConnection();
+			//conn = DBManager.getConnection();
 			stmt = conn.prepareStatement(sql);
 
 			stmt.setInt(1, customerId);
@@ -109,7 +109,7 @@ public class CustomerPersistor implements CustomerService {
 
 			return customer;
 		} finally {
-			closeConnection(conn, stmt);
+			closeConnection(stmt);
 		}
 	}
 	
@@ -125,7 +125,7 @@ public class CustomerPersistor implements CustomerService {
 	 * @email yanev93@gmail.com
 	 */
 	public CustomerData findByUsername(String username) throws SQLException {
-		Connection conn = null;
+		//Connection conn = null;
 		PreparedStatement stmt = null;
 		CustomerData customer = null;
 
@@ -133,7 +133,7 @@ public class CustomerPersistor implements CustomerService {
 			String sql = "SELECT id, status, username, email, age, country, city, is_hidden FROM "
 					+ TABLE + " WHERE  username = ?";
 
-			conn = DBManager.getConnection();
+			//conn = DBManager.getConnection();
 			stmt = conn.prepareStatement(sql);
 
 			stmt.setString(1, username);
@@ -149,7 +149,7 @@ public class CustomerPersistor implements CustomerService {
 
 			return customer;
 		} finally {
-			closeConnection(conn, stmt);
+			closeConnection(stmt);
 		}
 	}
 
@@ -159,8 +159,15 @@ public class CustomerPersistor implements CustomerService {
 	 * @author Nikolay Yanev
 	 * @email yanev93@gmail.com
 	 */
+	@SuppressWarnings("static-access")
 	private CustomerPersistor() {
+		DBManager dbManager = new DBManager();
 		
+		try {
+			this.conn = dbManager.getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -188,6 +195,14 @@ public class CustomerPersistor implements CustomerService {
 	}
 	
 	/**
+	 * Change connection 
+	 * @param connection
+	 */
+	public void setConnection(Connection connection) {
+		this.conn = connection;
+	}
+	
+	/**
 	 * @param conn
 	 * @param stmt
 	 * @throws SQLException
@@ -195,13 +210,13 @@ public class CustomerPersistor implements CustomerService {
 	 * @author Nikolay Yanev
 	 * @email yanev93@gmail.com
 	 */
-	private static void closeConnection(Connection conn, PreparedStatement stmt)
+	private static void closeConnection(PreparedStatement stmt)
 			throws SQLException {
 		if (stmt != null) {
 			stmt.close();
 		}
-		if (conn != null) {
+		/*if (conn != null) {
 			conn.close();
-		}
+		}*/
 	}
 }
