@@ -16,10 +16,10 @@ import com.neya.love.finder.bean.CustomerData;
 import com.neya.love.finder.services.CustomerService;
 import com.neya.love.finder.util.net.DBManager;
 import com.neya.love.finder.utils.StringUtil;
+import com.neya.love.finder.utils.DBTables;
 
 public class CustomerPersistor implements CustomerService {
 	private Connection conn = null;
-	private final static String TABLE = "customer";
 	private static CustomerPersistor singelton;
 
 	
@@ -40,7 +40,7 @@ public class CustomerPersistor implements CustomerService {
 		//DBManager dbManager = new DBManager();
 
 		try {
-			String sql = "INSERT INTO " + TABLE + " (status, username, password, email, age, country, city, is_hidden) " +
+			String sql = "INSERT INTO " + DBTables.CUSTOMER_TABLE + " (status, username, password, email, age, country, city, is_hidden) " +
 					"VALUES (?,?,?,?,?,?,?,?)";
 
 			//conn = dbManager.getConnection();
@@ -93,7 +93,7 @@ public class CustomerPersistor implements CustomerService {
 
 		try {
 			String sql = "SELECT id, status, username, email, age, country, city, is_hidden FROM "
-					+ TABLE + " WHERE  id = ?";
+					+ DBTables.CUSTOMER_TABLE + " WHERE  id = ?";
 
 			//conn = DBManager.getConnection();
 			stmt = conn.prepareStatement(sql);
@@ -133,7 +133,7 @@ public class CustomerPersistor implements CustomerService {
 
 		try {
 			String sql = "SELECT id, status, username, email, age, country, city, is_hidden FROM "
-					+ TABLE + " WHERE  username = ?";
+					+ DBTables.CUSTOMER_TABLE + " WHERE  username = ?";
 
 			//conn = DBManager.getConnection();
 			stmt = conn.prepareStatement(sql);
