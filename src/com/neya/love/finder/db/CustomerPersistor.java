@@ -16,13 +16,12 @@ import com.neya.love.finder.bean.CustomerData;
 import com.neya.love.finder.services.CustomerService;
 import com.neya.love.finder.util.net.DBManager;
 import com.neya.love.finder.utils.StringUtil;
+import com.neya.love.finder.utils.DBTables;
 
 public class CustomerPersistor implements CustomerService {
 	private Connection conn = null;
-	private final static String TABLE = "customer";
 	private static CustomerPersistor singelton;
 
-	
 	/**
 	 * Persist customer data to DB
 	 * 
@@ -33,17 +32,16 @@ public class CustomerPersistor implements CustomerService {
 	 * @author Nikolay Yanev
 	 * @email yanev93@gmail.com
 	 */
-	public boolean addCustomer(CustomerData customer)
-			throws SQLException {
-		//Connection conn = null;
+	public boolean addCustomer(CustomerData customer) throws SQLException {
+		// Connection conn = null;
 		PreparedStatement stmt = null;
-		//DBManager dbManager = new DBManager();
+		// DBManager dbManager = new DBManager();
 
 		try {
-			String sql = "INSERT INTO " + TABLE + " (status, username, password, email, age, country, city, is_hidden) " +
+			String sql = "INSERT INTO " + DBTables.CUSTOMER_TABLE + " (status, username, password, email, age, country, city, is_hidden) " +
 					"VALUES (?,?,?,?,?,?,?,?)";
 
-			//conn = dbManager.getConnection();
+			// conn = dbManager.getConnection();
 			stmt = conn.prepareStatement(sql);
 
 			stmt.setInt(1, customer.getStatus());
@@ -84,18 +82,17 @@ public class CustomerPersistor implements CustomerService {
 	 * 
 	 * @author Nikolay Yanev
 	 * @throws SQLException
-	 * @email yanev93@gmail.com
 	 */
 	public CustomerData findById(int customerId) throws SQLException {
-		//Connection conn = null;
+		// Connection conn = null;
 		PreparedStatement stmt = null;
 		CustomerData customer = null;
 
 		try {
 			String sql = "SELECT id, status, username, email, age, country, city, is_hidden FROM "
-					+ TABLE + " WHERE  id = ?";
+					+ DBTables.CUSTOMER_TABLE + " WHERE  id = ?";
 
-			//conn = DBManager.getConnection();
+			// conn = DBManager.getConnection();
 			stmt = conn.prepareStatement(sql);
 
 			stmt.setInt(1, customerId);
@@ -108,13 +105,13 @@ public class CustomerPersistor implements CustomerService {
 						String.valueOf(rs.getInt(6)), String.valueOf(rs
 								.getInt(7)), 0, rs.getInt(8));
 			}
-
-			return customer;
 		} finally {
 			closeConnection(stmt);
 		}
+
+		return customer;
 	}
-	
+
 	/**
 	 * Find customers
 	 * 
@@ -127,15 +124,13 @@ public class CustomerPersistor implements CustomerService {
 	 * @email yanev93@gmail.com
 	 */
 	public CustomerData findByUsername(String username) throws SQLException {
-		//Connection conn = null;
 		PreparedStatement stmt = null;
 		CustomerData customer = null;
 
 		try {
 			String sql = "SELECT id, status, username, email, age, country, city, is_hidden FROM "
-					+ TABLE + " WHERE  username = ?";
+					+ DBTables.CUSTOMER_TABLE + " WHERE  username = ?";
 
-			//conn = DBManager.getConnection();
 			stmt = conn.prepareStatement(sql);
 
 			stmt.setString(1, username);
@@ -156,6 +151,38 @@ public class CustomerPersistor implements CustomerService {
 	}
 
 	/**
+	 * @aut
+	 */
+	public boolean isFreeUsername(String username) throws SQLException {
+		PreparedStatement stmt = null;
+		boolean isFree = false;
+
+		try {
+			String sql = "SELECT id FROM " + TABLE + " WHERE  username = ?";
+
+			stmt = conn.prepareStatement(sql);
+
+			stmt.setString(1, username);
+
+			ResultSet rs = stmt.executeQuery();
+
+			if (!rs.next()) {
+				isFree = true;
+			}
+
+		} finally {
+			closeConnection(stmt);
+		}
+
+		return isFree;
+	}
+
+	public boolean chekForUser(CustomerData customer) throws SQLException {
+		return false;
+
+	}
+
+	/**
 	 * Default constructor
 	 * 
 	 * @author Nikolay Yanev
@@ -164,30 +191,30 @@ public class CustomerPersistor implements CustomerService {
 	@SuppressWarnings("static-access")
 	private CustomerPersistor() {
 		DBManager dbManager = new DBManager();
-		
+
 		try {
 			this.conn = dbManager.getConnection();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * Create new instance of CustomerPersistor
-	 * if no instance is created
+	 * Create new instance of CustomerPersistor if no instance is created
+	 * 
 	 * @return instance of CustomerPersistor
 	 * 
 	 * @author Nikolay Yanev
 	 * @email yanev93@gmail.com
 	 */
 	public static synchronized CustomerPersistor getInstance() {
-		if(singelton == null) {
+		if (singelton == null) {
 			singelton = new CustomerPersistor();
 		}
-		
+
 		return singelton;
 	}
-	
+
 	/**
 	 * @author Nikolay Yanev
 	 * @email yanev93@gmail.com
@@ -195,15 +222,16 @@ public class CustomerPersistor implements CustomerService {
 	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException();
 	}
-	
+
 	/**
-	 * Change connection 
+	 * Change connection
+	 * 
 	 * @param connection
 	 */
 	public void setConnection(Connection connection) {
 		this.conn = connection;
 	}
-	
+
 	/**
 	 * @param conn
 	 * @param stmt
@@ -217,8 +245,8 @@ public class CustomerPersistor implements CustomerService {
 		if (stmt != null) {
 			stmt.close();
 		}
-		/*if (conn != null) {
-			conn.close();
-		}*/
+		/*
+		 * if (conn != null) { conn.close(); }
+		 */
 	}
 }

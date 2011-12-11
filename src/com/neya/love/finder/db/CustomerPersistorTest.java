@@ -12,7 +12,6 @@ import java.sql.SQLException;
 
 import org.junit.Test;
 
-import com.mockobjects.jms.MockConnection;
 import com.neya.love.finder.bean.CustomerData;
 
 /**
@@ -34,9 +33,9 @@ public class CustomerPersistorTest{
 	public void testAddCustomer() throws SQLException {
 		CustomerPersistor persistor = CustomerPersistor.getInstance();
 		
-		final MockConnection mock = new MockConnection();
+		/*final MockConnection mock = new MockConnection();
         mock.setExpectedCloseCalls(0);
-        //mock.setupAddPreparedStatement(Mock);
+        //mock.setupAddPreparedStatement(Mock);*/
 		
 		//persistor.setConnection(mock);
 		CustomerData customer = new CustomerData(0, 1, "liana",

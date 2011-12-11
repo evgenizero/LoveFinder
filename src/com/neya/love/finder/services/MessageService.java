@@ -1,4 +1,8 @@
 /**
+ * Interface to the messaging service
+ * @author Evgeni Yanev
+ * @email evgenizero@gmail.com
+ * @date 11 Dec 2011
  * 
  */
 package com.neya.love.finder.services;
@@ -12,8 +16,8 @@ import com.neya.love.finder.bean.Message;
  * @author Evgeni Yanev
  *
  */
-public interface MessageService {
+public interface MessageService extends IService{
 	public boolean addMessage(Message message) throws SQLException;
-	public List<Message> findMessagesByDate(long date) throws SQLException;
+	public List<Message> findMessagesByDate(long date, int customerId) throws SQLException;
 	public List<Message> findMessagesBySenderReceiver(int senderId, int receiverId) throws SQLException;
 }
