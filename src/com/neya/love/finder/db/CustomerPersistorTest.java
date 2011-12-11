@@ -79,6 +79,7 @@ public class CustomerPersistorTest {
 		when(conn.prepareStatement(sql)).thenReturn(stmt);
 		when(stmt.executeQuery()).thenReturn(rs);
 
+		when(rs.next()).thenReturn(true);
 		when(rs.getInt(1)).thenReturn(1);
 		when(rs.getInt(2)).thenReturn(1);
 		when(rs.getString(3)).thenReturn("liana");
@@ -88,9 +89,46 @@ public class CustomerPersistorTest {
 		when(rs.getInt(7)).thenReturn(1);
 		when(rs.getInt(8)).thenReturn(1);
 
-		// System.out.println("test");
-		// System.out.println(persistor.findById(1).getUsername());
 		assertNotNull(persistor.findById(1));
+	}
+
+	/**
+	 * Test findById() return rightCustomer
+	 * 
+	 * @author Nikolay Yanev
+	 * @throws SQLException
+	 * @email yanev93@gmail.com
+	 * @date 15 Nov 2011
+	 */
+	@Test
+	public void testFindByIdReturnRightCustomer() throws SQLException {
+		String sql = "SELECT id, status, username, email, age, country, city, is_hidden FROM "
+				+ DBTables.CUSTOMER_TABLE + " WHERE  id = ?";
+		
+		CustomerData customer = new CustomerData(0, 1, "liana", "liainiki",
+				"liana1533@gmail.com", 18, "1", "1", 0, 1);
+
+		Connection conn = mock(Connection.class);
+		PreparedStatement stmt = mock(PreparedStatement.class);
+
+		CustomerPersistor persistor = new CustomerPersistor(conn);
+
+		ResultSet rs = mock(ResultSet.class);
+
+		when(conn.prepareStatement(sql)).thenReturn(stmt);
+		when(stmt.executeQuery()).thenReturn(rs);
+
+		when(rs.next()).thenReturn(true);
+		when(rs.getInt(1)).thenReturn(1);
+		when(rs.getInt(2)).thenReturn(1);
+		when(rs.getString(3)).thenReturn("liana");
+		when(rs.getString(4)).thenReturn("liana1533@gmail.com");
+		when(rs.getInt(5)).thenReturn(18);
+		when(rs.getInt(6)).thenReturn(1);
+		when(rs.getInt(7)).thenReturn(1);
+		when(rs.getInt(8)).thenReturn(1);
+
+		assertEquals(customer.getUsername(), persistor.findById(1).getUsername());
 	}
 
 	/**
@@ -104,7 +142,7 @@ public class CustomerPersistorTest {
 	@Test
 	public void tesFindByUsernameIsNotNull() throws SQLException {
 		String sql = "SELECT id, status, username, email, age, country, city, is_hidden FROM "
-				+ DBTables.CUSTOMER_TABLE + " WHERE  id = ?";
+				+ DBTables.CUSTOMER_TABLE + " WHERE  username = ?";
 
 		Connection conn = mock(Connection.class);
 		PreparedStatement stmt = mock(PreparedStatement.class);
@@ -116,6 +154,7 @@ public class CustomerPersistorTest {
 		when(conn.prepareStatement(sql)).thenReturn(stmt);
 		when(stmt.executeQuery()).thenReturn(rs);
 
+		when(rs.next()).thenReturn(true);
 		when(rs.getInt(1)).thenReturn(1);
 		when(rs.getInt(2)).thenReturn(1);
 		when(rs.getString(3)).thenReturn("liana");
@@ -127,11 +166,50 @@ public class CustomerPersistorTest {
 
 		// System.out.println("test");
 		// System.out.println(persistor.findById(1).getUsername());
-		assertNotNull(persistor.findById(1));
+		assertNotNull(persistor.findByUsername("liana"));
 	}
 	
 	/**
-	 * Test returned customer is not null
+	 * Test findById() return rightCustomer
+	 * 
+	 * @author Nikolay Yanev
+	 * @throws SQLException
+	 * @email yanev93@gmail.com
+	 * @date 15 Nov 2011
+	 */
+	@Test
+	public void testFindByUsernameReturnRightCustomer() throws SQLException {
+		String sql = "SELECT id, status, username, email, age, country, city, is_hidden FROM "
+				+ DBTables.CUSTOMER_TABLE + " WHERE  username = ?";
+		
+		CustomerData customer = new CustomerData(0, 1, "liana", "liainiki",
+				"liana1533@gmail.com", 18, "1", "1", 0, 1);
+
+		Connection conn = mock(Connection.class);
+		PreparedStatement stmt = mock(PreparedStatement.class);
+
+		CustomerPersistor persistor = new CustomerPersistor(conn);
+
+		ResultSet rs = mock(ResultSet.class);
+
+		when(conn.prepareStatement(sql)).thenReturn(stmt);
+		when(stmt.executeQuery()).thenReturn(rs);
+
+		when(rs.next()).thenReturn(true);
+		when(rs.getInt(1)).thenReturn(1);
+		when(rs.getInt(2)).thenReturn(1);
+		when(rs.getString(3)).thenReturn("liana");
+		when(rs.getString(4)).thenReturn("liana1533@gmail.com");
+		when(rs.getInt(5)).thenReturn(18);
+		when(rs.getInt(6)).thenReturn(1);
+		when(rs.getInt(7)).thenReturn(1);
+		when(rs.getInt(8)).thenReturn(1);
+
+		assertEquals(customer.getUsername(), persistor.findByUsername("liana").getUsername());
+	}
+
+	/**
+	 * Test if the username is free
 	 * 
 	 * @author Nikolay Yanev
 	 * @throws SQLException
@@ -153,9 +231,8 @@ public class CustomerPersistorTest {
 		when(conn.prepareStatement(sql)).thenReturn(stmt);
 		when(stmt.executeQuery()).thenReturn(rs);
 		when(rs.next()).thenReturn(false);
-		
+
 		assertTrue(persistor.isFreeUsername("niki"));
 	}
-
 
 }
