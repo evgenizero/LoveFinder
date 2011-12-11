@@ -16,7 +16,6 @@ import java.util.List;
 
 import com.neya.love.finder.bean.Message;
 import com.neya.love.finder.services.MessageService;
-import com.neya.love.finder.util.net.DBManager;
 import com.neya.love.finder.utils.DBTables;
 
 public class MessagePersistor implements MessageService {

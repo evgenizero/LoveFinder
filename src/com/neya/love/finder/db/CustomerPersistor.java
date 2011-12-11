@@ -20,7 +20,8 @@ import com.neya.love.finder.utils.DBTables;
 
 public class CustomerPersistor implements CustomerService {
 	private Connection conn = null;
-	private static CustomerPersistor singelton;
+
+	// private static CustomerPersistor singelton;
 
 	/**
 	 * Persist customer data to DB
@@ -33,13 +34,14 @@ public class CustomerPersistor implements CustomerService {
 	 * @email yanev93@gmail.com
 	 */
 	public boolean addCustomer(CustomerData customer) throws SQLException {
-		// Connection conn = null;
 		PreparedStatement stmt = null;
-		// DBManager dbManager = new DBManager();
+		boolean isCustomerAdded = false;
 
 		try {
-			String sql = "INSERT INTO " + DBTables.CUSTOMER_TABLE + " (status, username, password, email, age, country, city, is_hidden) " +
-					"VALUES (?,?,?,?,?,?,?,?)";
+			String sql = "INSERT INTO "
+					+ DBTables.CUSTOMER_TABLE
+					+ " (status, username, password, email, age, country, city, is_hidden) "
+					+ "VALUES (?,?,?,?,?,?,?,?)";
 
 			// conn = dbManager.getConnection();
 			stmt = conn.prepareStatement(sql);
@@ -55,22 +57,16 @@ public class CustomerPersistor implements CustomerService {
 										// convert to short from String)
 			stmt.setInt(8, customer.getIsHidden());
 
-			if (stmt.executeUpdate() == 1) {
-				closeConnection(stmt);
+			if (stmt.executeUpdate() == 1)
+				isCustomerAdded = true;
 
-				return true;
-			} else {
-				closeConnection(stmt);
-
-				return false;
-			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			closeConnection(stmt);
 		}
 
-		return false;
+		return isCustomerAdded;
 	}
 
 	/**
@@ -158,7 +154,8 @@ public class CustomerPersistor implements CustomerService {
 		boolean isFree = false;
 
 		try {
-			String sql = "SELECT id FROM " + TABLE + " WHERE  username = ?";
+			String sql = "SELECT id FROM " + DBTables.CUSTOMER_TABLE
+					+ " WHERE  username = ?";
 
 			stmt = conn.prepareStatement(sql);
 
@@ -189,11 +186,14 @@ public class CustomerPersistor implements CustomerService {
 	 * @email yanev93@gmail.com
 	 */
 	@SuppressWarnings("static-access")
-	private CustomerPersistor() {
-		DBManager dbManager = new DBManager();
-
+	public CustomerPersistor(Connection connection) {
 		try {
-			this.conn = dbManager.getConnection();
+			if (connection == null) {
+				DBManager dbManager = new DBManager();
+				this.conn = dbManager.getConnection();
+			} else {
+				this.conn = connection;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -207,30 +207,31 @@ public class CustomerPersistor implements CustomerService {
 	 * @author Nikolay Yanev
 	 * @email yanev93@gmail.com
 	 */
-	public static synchronized CustomerPersistor getInstance() {
-		if (singelton == null) {
-			singelton = new CustomerPersistor();
-		}
-
-		return singelton;
-	}
+	/*
+	 * public static synchronized CustomerPersistor getInstance() { if
+	 * (singelton == null) { singelton = new CustomerPersistor(); }
+	 * 
+	 * return singelton; }
+	 */
 
 	/**
 	 * @author Nikolay Yanev
 	 * @email yanev93@gmail.com
 	 */
-	public Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException();
-	}
+	/*
+	 * public Object clone() throws CloneNotSupportedException { throw new
+	 * CloneNotSupportedException(); }
+	 */
 
 	/**
 	 * Change connection
 	 * 
 	 * @param connection
 	 */
-	public void setConnection(Connection connection) {
-		this.conn = connection;
-	}
+	/*
+	 * public void setConnection(Connection connection) { this.conn =
+	 * connection; }
+	 */
 
 	/**
 	 * @param conn
@@ -240,8 +241,7 @@ public class CustomerPersistor implements CustomerService {
 	 * @author Nikolay Yanev
 	 * @email yanev93@gmail.com
 	 */
-	private static void closeConnection(PreparedStatement stmt)
-			throws SQLException {
+	private void closeConnection(PreparedStatement stmt) throws SQLException {
 		if (stmt != null) {
 			stmt.close();
 		}
