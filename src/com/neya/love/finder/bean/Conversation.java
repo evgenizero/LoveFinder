@@ -7,7 +7,7 @@ public class Conversation {
 	private CustomerData firstUser;
 	private CustomerData secondUser;
 	private ConversationDBLoader conversationLoader;
-	
+
 	public Conversation(CustomerData firstUser, CustomerData secondUser) {
 		conversationLoader = new ConversationDBLoader();
 

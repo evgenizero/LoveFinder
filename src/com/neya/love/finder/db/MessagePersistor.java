@@ -1,7 +1,7 @@
 /**
- * Make DB connection
+ * Persists messages into the DB
  * @author Evgeni Yanev
- * @email evgenizero93@gmail.com
+ * @email evgenizero@gmail.com
  * @date 26 Nov 2011
  */
 
@@ -17,11 +17,14 @@ import java.util.List;
 import com.neya.love.finder.bean.Message;
 import com.neya.love.finder.services.MessageService;
 import com.neya.love.finder.util.net.DBManager;
+import com.neya.love.finder.utils.DBTables;
 
 public class MessagePersistor implements MessageService {
-	private final static String TABLE = "message";
+	// private final static String TABLE = "message";
 	private static MessagePersistor singelton;
 
+	private Connection conn;
+	
 	/**
 	 * Persist a message to the DB
 	 * 
@@ -35,21 +38,20 @@ public class MessagePersistor implements MessageService {
 
 	@Override
 	public boolean addMessage(Message message) throws SQLException {
-		Connection conn = null;
 		PreparedStatement stmt = null;
-		DBManager dbManager = new DBManager();
+		//DBManager dbManager = new DBManager();
 
 		try {
-			String sql = "INSERT INTO " + TABLE + " (message, date, senderId, receiverId) VALUES (?,?,?,?)";
+			String sql = "INSERT INTO " + DBTables.MESSAGE_TABLE
+					+ " (message, date, senderId, receiverId) VALUES (?,?,?,?)";
 
-			conn = dbManager.getConnection();
 			stmt = conn.prepareStatement(sql);
 
 			stmt.setString(1, message.getMessage());
 			stmt.setLong(2, message.getDate());
 			stmt.setInt(3, message.getMessageSenderId());
 			stmt.setInt(4, message.getMessageReceiverId());
-
+			
 			if (stmt.executeUpdate() == 1) {
 				closeConnection(conn, stmt);
 
@@ -64,7 +66,6 @@ public class MessagePersistor implements MessageService {
 		} finally {
 			closeConnection(conn, stmt);
 		}
-
 		return false;
 	}
 
@@ -81,8 +82,9 @@ public class MessagePersistor implements MessageService {
 	 */
 
 	@Override
-	public List<Message> findMessagesByDate(long date) throws SQLException {
-		Connection conn = null;
+	public List<Message> findMessagesByDate(long date, int customerId)
+			throws SQLException {
+		
 		PreparedStatement stmt = null;
 		Message message = null;
 
@@ -90,12 +92,14 @@ public class MessagePersistor implements MessageService {
 
 		try {
 			String sql = "SELECT message, date, senderId, receiverId FROM "
-					+ TABLE + " WHERE  date = ?";
+					+ DBTables.MESSAGE_TABLE + ", " + DBTables.CUSTOMER_TABLE
+					+ " WHERE  date = ? AND " + DBTables.CUSTOMER_TABLE
+					+ ".id = ?";
 
-			conn = DBManager.getConnection();
 			stmt = conn.prepareStatement(sql);
 
 			stmt.setLong(1, date);
+			stmt.setInt(2, customerId);
 
 			ResultSet rs = stmt.executeQuery();
 
@@ -126,7 +130,7 @@ public class MessagePersistor implements MessageService {
 	@Override
 	public List<Message> findMessagesBySenderReceiver(int senderId,
 			int receiverId) throws SQLException {
-		Connection conn = null;
+		
 		PreparedStatement stmt = null;
 		Message message = null;
 
@@ -134,9 +138,9 @@ public class MessagePersistor implements MessageService {
 
 		try {
 			String sql = "SELECT message, date, senderId, receiverId FROM "
-					+ TABLE + " WHERE  senderId = ? AND receiverId = ?";
+					+ DBTables.MESSAGE_TABLE
+					+ " WHERE  senderId = ? AND receiverId = ?";
 
-			conn = DBManager.getConnection();
 			stmt = conn.prepareStatement(sql);
 
 			stmt.setInt(1, senderId);
@@ -155,6 +159,12 @@ public class MessagePersistor implements MessageService {
 		}
 	}
 
+	
+	
+	public void setConnection(Connection conn) {
+		this.conn = conn;
+	}
+	
 	/**
 	 * Default constructor is private so there would be only one instance of
 	 * that class
@@ -162,7 +172,13 @@ public class MessagePersistor implements MessageService {
 	 * @author Evgeni Yanev
 	 * @email evgenizero@gmail.com
 	 */
-	private MessagePersistor() {}
+	private MessagePersistor() {
+//		try {
+//			this.conn = DBManager.getConnection();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+	}
 
 	/**
 	 * Create new instance of MessagePersistor if no instance is created
