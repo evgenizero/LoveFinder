@@ -66,8 +66,8 @@ public class CustomerPersistorTest {
 	 */
 	@Test
 	public void tesFindByIdIsNotNull() throws SQLException {
-		String sql = "SELECT id, status, username, email, age, country, city, is_hidden FROM "
-				+ DBTables.CUSTOMER_TABLE + " WHERE  id = ?";
+		String sql = "SELECT customer_id, status, username, email, age, country, city, is_hidden FROM "
+				+ DBTables.CUSTOMER_TABLE + " WHERE  customer_id = ?";
 
 		Connection conn = mock(Connection.class);
 		PreparedStatement stmt = mock(PreparedStatement.class);
@@ -102,8 +102,8 @@ public class CustomerPersistorTest {
 	 */
 	@Test
 	public void testFindByIdReturnRightCustomer() throws SQLException {
-		String sql = "SELECT id, status, username, email, age, country, city, is_hidden FROM "
-				+ DBTables.CUSTOMER_TABLE + " WHERE  id = ?";
+		String sql = "SELECT customer_id, status, username, email, age, country, city, is_hidden FROM "
+				+ DBTables.CUSTOMER_TABLE + " WHERE  customer_id = ?";
 		
 		CustomerData customer = new CustomerData(0, 1, "liana", "liainiki",
 				"liana1533@gmail.com", 18, "1", "1", 0, 1);
@@ -141,7 +141,7 @@ public class CustomerPersistorTest {
 	 */
 	@Test
 	public void tesFindByUsernameIsNotNull() throws SQLException {
-		String sql = "SELECT id, status, username, email, age, country, city, is_hidden FROM "
+		String sql = "SELECT customer_id, status, username, email, age, country, city, is_hidden FROM "
 				+ DBTables.CUSTOMER_TABLE + " WHERE  username = ?";
 
 		Connection conn = mock(Connection.class);
@@ -179,7 +179,7 @@ public class CustomerPersistorTest {
 	 */
 	@Test
 	public void testFindByUsernameReturnRightCustomer() throws SQLException {
-		String sql = "SELECT id, status, username, email, age, country, city, is_hidden FROM "
+		String sql = "SELECT customer_id, status, username, email, age, country, city, is_hidden FROM "
 				+ DBTables.CUSTOMER_TABLE + " WHERE  username = ?";
 		
 		CustomerData customer = new CustomerData(0, 1, "liana", "liainiki",
@@ -218,7 +218,7 @@ public class CustomerPersistorTest {
 	 */
 	@Test
 	public void tesIsFreeUsername() throws SQLException {
-		String sql = "SELECT id FROM " + DBTables.CUSTOMER_TABLE
+		String sql = "SELECT customer_id FROM " + DBTables.CUSTOMER_TABLE
 				+ " WHERE  username = ?";
 
 		Connection conn = mock(Connection.class);

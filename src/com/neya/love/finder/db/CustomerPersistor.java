@@ -14,9 +14,10 @@ import java.sql.SQLException;
 
 import com.neya.love.finder.bean.CustomerData;
 import com.neya.love.finder.services.CustomerService;
-import com.neya.love.finder.util.net.DBManager;
+import com.neya.love.finder.utils.LFConstants;
 import com.neya.love.finder.utils.StringUtil;
 import com.neya.love.finder.utils.DBTables;
+import com.neya.love.finder.utils.net.DBManager;
 
 public class CustomerPersistor implements CustomerService {
 	private Connection conn = null;
@@ -46,7 +47,7 @@ public class CustomerPersistor implements CustomerService {
 			// conn = dbManager.getConnection();
 			stmt = conn.prepareStatement(sql);
 
-			stmt.setInt(1, customer.getStatus());
+			stmt.setInt(1, LFConstants.CUSTOMER_DEFAULT_STATUS);
 			stmt.setString(2, customer.getUsername());
 			stmt.setString(3, StringUtil.md5(customer.getPassword()));
 			stmt.setString(4, customer.getEmail());
@@ -85,8 +86,8 @@ public class CustomerPersistor implements CustomerService {
 		CustomerData customer = null;
 
 		try {
-			String sql = "SELECT id, status, username, email, age, country, city, is_hidden FROM "
-					+ DBTables.CUSTOMER_TABLE + " WHERE  id = ?";
+			String sql = "SELECT customer_id, status, username, email, age, country, city, is_hidden FROM "
+					+ DBTables.CUSTOMER_TABLE + " WHERE  customer_id = ?";
 
 			// conn = DBManager.getConnection();
 			stmt = conn.prepareStatement(sql);
@@ -124,7 +125,7 @@ public class CustomerPersistor implements CustomerService {
 		CustomerData customer = null;
 
 		try {
-			String sql = "SELECT id, status, username, email, age, country, city, is_hidden FROM "
+			String sql = "SELECT customer_id, status, username, email, age, country, city, is_hidden FROM "
 					+ DBTables.CUSTOMER_TABLE + " WHERE  username = ?";
 
 			stmt = conn.prepareStatement(sql);
@@ -154,7 +155,7 @@ public class CustomerPersistor implements CustomerService {
 		boolean isFree = false;
 
 		try {
-			String sql = "SELECT id FROM " + DBTables.CUSTOMER_TABLE
+			String sql = "SELECT customer_id FROM " + DBTables.CUSTOMER_TABLE
 					+ " WHERE  username = ?";
 
 			stmt = conn.prepareStatement(sql);
@@ -180,10 +181,9 @@ public class CustomerPersistor implements CustomerService {
 	}
 
 	/**
-	 * Default constructor
+	 * @param connection
 	 * 
-	 * @author Nikolay Yanev
-	 * @email yanev93@gmail.com
+	 * @author <a href="mailto:yanev93@gmail.com">Nikolay Yanev</a>
 	 */
 	@SuppressWarnings("static-access")
 	public CustomerPersistor(Connection connection) {
@@ -194,6 +194,20 @@ public class CustomerPersistor implements CustomerService {
 			} else {
 				this.conn = connection;
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 
+	 * @author <a href="mailto:yanev93@gmail.com">Nikolay Yanev</a>
+	 */
+	@SuppressWarnings("static-access")
+	public CustomerPersistor() {
+		DBManager dbManager = new DBManager();
+		try {
+			this.conn = dbManager.getConnection();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

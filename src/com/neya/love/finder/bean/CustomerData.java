@@ -52,6 +52,30 @@ public class CustomerData {
 	}
 
 	/**
+	 * 
+	 * @param username
+	 * @param password
+	 * @param email
+	 * @param age
+	 * @param country
+	 * @param city
+	 * @param isHidden
+	 * 
+	 * @author <a href="mailto:yanev93@gmail.com">Nikolay Yanev</a>
+	 */
+	public CustomerData(String username, String password, String email,
+			int age, String country, String city, int isHidden) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.age = age;
+		this.country = country;
+		this.city = city;
+		this.isHidden = isHidden;
+	}
+
+	/**
 	 * @return the customerId
 	 */
 	public int getCustomerId() {
@@ -67,7 +91,7 @@ public class CustomerData {
 			throw new InvalidParameterException(
 					"Customer id must be greater than 0");
 		}
-		
+
 		this.customerId = customerId;
 	}
 
@@ -86,7 +110,7 @@ public class CustomerData {
 		if (status < 0) {
 			throw new InvalidParameterException("Status must be greater than 0");
 		}
-		
+
 		this.status = status;
 	}
 
@@ -149,8 +173,9 @@ public class CustomerData {
 	 *            the age to set
 	 */
 	public void setAge(int age) {
-		if(age < 18 && age > 70) {
-			throw new InvalidParameterException("Age of the customer must be betwen 18 and 70");
+		if (age < 18 && age > 70) {
+			throw new InvalidParameterException(
+					"Age of the customer must be betwen 18 and 70");
 		}
 		this.age = age;
 	}

@@ -1,4 +1,4 @@
-package com.neya.love.finder.util.net;
+package com.neya.love.finder.utils.net;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -6,6 +6,8 @@ import java.util.StringTokenizer;
 import javax.sql.DataSource;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+
+import com.neya.love.finder.utils.LFConstants;
 
 @SuppressWarnings("unused")
 public class DBManager {
@@ -17,11 +19,9 @@ public class DBManager {
 			if (context == null) {
 				throw new Exception("No Context");
 			}
-			// TODO extract "java:comp/env/jdbc/mysqlDB" in new Constants class
 			dataSource = (DataSource) context
-					.lookup("java:comp/env/jdbc/mysqlDB");
+					.lookup(LFConstants.JNDI_DATASOURCE);
 		} catch (Exception e) {
-			// TODO Add to log
 			e.printStackTrace();
 		}
 	}
