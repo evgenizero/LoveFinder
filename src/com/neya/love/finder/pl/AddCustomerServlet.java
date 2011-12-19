@@ -32,53 +32,59 @@ public class AddCustomerServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		
-		Map<String, String> jsonoObject = new HashMap<String, String>();	
-		
+
+		Map<String, String> jsonoObject = new HashMap<String, String>();
+		int age = 0;
+		int isHidden = 1;
 		try {
 			String username = req.getParameter("username");
 			String password = req.getParameter("password");
 			String email = req.getParameter("email");
-			int age = Integer.parseInt(req.getParameter("age"));
+			if (req.getParameter("age") != null)
+				age = Integer.parseInt(req.getParameter("age"));
+
 			String country = req.getParameter("country");
 			String city = req.getParameter("city");
-			int isHidden = Integer.parseInt(req.getParameter("isHidden"));
-			
+			if (req.getParameter("isHidden") != null)
+				isHidden = Integer.parseInt(req.getParameter("isHidden"));
+
 			if (username != null
 					&& !("".equals(username) && password != null && !(""
-							.equals(password)))) { 
-				
-				//validCustomerResponseCustomerUtils.isValidUsername
+							.equals(password)))) {
+
+				// validCustomerResponseCustomerUtils.isValidUsername
 				CustomerData customer = new CustomerData(username, password,
 						email, age, country, city, isHidden);
 
 				CustomerPersistor customerPersistor = new CustomerPersistor();
 				if (customerPersistor.addCustomer(customer)) {
 					jsonoObject.put("status_code", "1");
-					jsonoObject.put("status-message", "User was added successfully");
+					jsonoObject.put("status-message",
+							"User was added successfully");
 				}
 			} else {
 				System.out.println("Error");
 				jsonoObject.put("status_code", "0");
-				jsonoObject.put("status-message", "Username or password are not correct!");
+				jsonoObject.put("status-message",
+						"Username or password are not correct!");
 			}
 
 		} catch (NumberFormatException ex) {
-
+			ex.printStackTrace();
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
-		
+
 		PrintWriter printWriter = resp.getWriter();
 		printWriter.println(toJSON(jsonoObject));
 	}
-	
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		doPost(req, resp);
 	}
-	
+
 	private JSON toJSON(Map<String, String> jsonMessage) {
 		return JSONSerializer.toJSON(jsonMessage);
 	}
