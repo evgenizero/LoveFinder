@@ -19,10 +19,25 @@ import com.neya.love.finder.services.MessageService;
 import com.neya.love.finder.utils.DBTables;
 
 public class MessagePersistor implements MessageService {
-	// private final static String TABLE = "message";
 	private static MessagePersistor singelton;
-
 	private Connection conn;
+	
+	/**
+	 * Checks for the available connection
+	 * @return void
+	 * 
+	 * @author Evgeni Yanev
+	 * @email evgenizero@gmail.com
+	 * 
+	 * @throws SQLException
+	 */
+	
+	private void checkAvailableConnection() throws SQLException {
+		if(conn == null) {
+			DBManager manager = new DBManager();
+			conn = DBManager.getConnection();
+		}
+	}
 	
 	/**
 	 * Persist a message to the DB
@@ -35,12 +50,14 @@ public class MessagePersistor implements MessageService {
 	 * @email evgenizero@gmail.com
 	 */
 
+	
 	@Override
 	public boolean addMessage(Message message) throws SQLException {
 		PreparedStatement stmt = null;
-		//DBManager dbManager = new DBManager();
 
 		try {
+			checkAvailableConnection();
+			
 			String sql = "INSERT INTO " + DBTables.MESSAGE_TABLE
 					+ " (message, date, senderId, receiverId) VALUES (?,?,?,?)";
 
@@ -52,14 +69,8 @@ public class MessagePersistor implements MessageService {
 			stmt.setInt(4, message.getMessageReceiverId());
 			
 			if (stmt.executeUpdate() == 1) {
-				closeConnection(conn, stmt);
-
 				return true;
-			} else {
-				closeConnection(conn, stmt);
-
-				return false;
-			}
+			} 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -90,6 +101,8 @@ public class MessagePersistor implements MessageService {
 		List<Message> messageList = new ArrayList<Message>();
 
 		try {
+			checkAvailableConnection();
+			
 			String sql = "SELECT message, date, senderId, receiverId FROM "
 					+ DBTables.MESSAGE_TABLE + ", " + DBTables.CUSTOMER_TABLE
 					+ " WHERE  date = ? AND " + DBTables.CUSTOMER_TABLE
@@ -107,10 +120,12 @@ public class MessagePersistor implements MessageService {
 						rs.getInt(3), rs.getInt(4));
 				messageList.add(message);
 			}
-			return messageList;
+		} catch(SQLException e) {
+			e.printStackTrace();
 		} finally {
 			closeConnection(conn, stmt);
 		}
+		return messageList;
 	}
 
 	/**
@@ -136,6 +151,8 @@ public class MessagePersistor implements MessageService {
 		List<Message> messageList = new ArrayList<Message>();
 
 		try {
+			checkAvailableConnection();
+			
 			String sql = "SELECT message, date, senderId, receiverId FROM "
 					+ DBTables.MESSAGE_TABLE
 					+ " WHERE  senderId = ? AND receiverId = ?";
@@ -152,10 +169,12 @@ public class MessagePersistor implements MessageService {
 						rs.getInt(3), rs.getInt(4));
 				messageList.add(message);
 			}
-			return messageList;
+		} catch(SQLException e) {
+			e.printStackTrace();
 		} finally {
 			closeConnection(conn, stmt);
 		}
+		return messageList;
 	}
 
 	
@@ -171,13 +190,7 @@ public class MessagePersistor implements MessageService {
 	 * @author Evgeni Yanev
 	 * @email evgenizero@gmail.com
 	 */
-	private MessagePersistor() {
-//		try {
-//			this.conn = DBManager.getConnection();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-	}
+	private MessagePersistor() {}
 
 	/**
 	 * Create new instance of MessagePersistor if no instance is created

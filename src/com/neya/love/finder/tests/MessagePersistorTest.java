@@ -38,27 +38,6 @@ public class MessagePersistorTest {
 			+ " WHERE  senderId = ? AND receiverId = ?";
 	
 	/**
-	 * 
-	 * @param conn
-	 * @param stmt
-	 * @param messagePersistor
-	 * @return true if the persistor succeeds
-	 * @throws SQLException
-	 * 
-	 * @author Evgeni Yanev
-	 * @email evgenizero@gmail.com
-	 */
-	
-	public boolean addMessage(Connection conn, PreparedStatement stmt, MessagePersistor messagePersistor) throws SQLException {
-    	Message message = new Message("hello", 123l, 5, 6);
-	
-    	messagePersistor.setConnection(conn);
-    	when(conn.prepareStatement(addMessageSql)).thenReturn(stmt);
-    	when(stmt.executeUpdate()).thenReturn(0);
-    	return messagePersistor.addMessage(message);
-	}
-	
-	/**
 	 * JUnit test to check if adding messages into the DB is correct
 	 * @throws SQLException
 	 * 
@@ -74,7 +53,13 @@ public class MessagePersistorTest {
     	Connection conn = mock(Connection.class);
     	PreparedStatement stmt = mock(PreparedStatement.class);
     	
-    	assertTrue(addMessage(conn, stmt, messagePersistor));
+    	Message message = new Message("hello", 123l, 5, 6);
+    	
+    	messagePersistor.setConnection(conn);
+    	when(conn.prepareStatement(addMessageSql)).thenReturn(stmt);
+    	when(stmt.executeUpdate()).thenReturn(1);
+    	
+    	assertTrue(messagePersistor.addMessage(message));
     }
     
     /**
@@ -93,12 +78,19 @@ public class MessagePersistorTest {
     	Connection conn = mock(Connection.class);
     	PreparedStatement stmt = mock(PreparedStatement.class);
     	
-    	addMessage(conn, stmt, messagePersistor);
+    	messagePersistor.setConnection(conn);
     	
     	ResultSet rs = mock(ResultSet.class);
     	
     	when(conn.prepareStatement(selectMessageByDateSql)).thenReturn(stmt);
     	when(stmt.executeQuery()).thenReturn(rs);
+    	
+    	when(rs.next()).thenReturn(true, false);
+    	
+    	when(rs.getString(1)).thenReturn("Evgeni");
+    	when(rs.getLong(2)).thenReturn(123l);
+    	when(rs.getInt(3)).thenReturn(5);
+    	when(rs.getInt(4)).thenReturn(6);
     	
     	List<Message> messagesList = messagePersistor.findMessagesByDate(123l, 5);
     	assertEquals(1, messagesList.size());
@@ -119,12 +111,19 @@ public class MessagePersistorTest {
     	Connection conn = mock(Connection.class);
     	PreparedStatement stmt = mock(PreparedStatement.class);
     	
-    	addMessage(conn, stmt, messagePersistor);
+    	messagePersistor.setConnection(conn);
     	
     	ResultSet rs = mock(ResultSet.class);
     	
     	when(conn.prepareStatement(selectMessageBySenderReceiverSql)).thenReturn(stmt);
     	when(stmt.executeQuery()).thenReturn(rs);
+    	
+    	when(rs.next()).thenReturn(true, false);
+    	
+    	when(rs.getString(1)).thenReturn("Evgeni");
+    	when(rs.getLong(2)).thenReturn(123l);
+    	when(rs.getInt(3)).thenReturn(5);
+    	when(rs.getInt(4)).thenReturn(6);
     	
     	List<Message> messagesList = messagePersistor.findMessagesBySenderReceiver(5, 6);
     	assertEquals(1, messagesList.size());
