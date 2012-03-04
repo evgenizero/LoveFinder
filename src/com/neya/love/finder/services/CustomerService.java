@@ -12,7 +12,8 @@ import com.neya.love.finder.bean.CustomerData;
  *
  */
 public interface CustomerService extends IService{
-	public boolean addCustomer(CustomerData customer) throws SQLException;
+	public int addCustomer(CustomerData customer) throws SQLException;
+	public int logIn(String username, String password) throws SQLException;
 	public CustomerData findById(int customerId) throws SQLException;
 	public CustomerData findByUsername(String username) throws SQLException;
 	public boolean isFreeUsername(String username) throws SQLException;

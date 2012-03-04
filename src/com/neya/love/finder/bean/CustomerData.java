@@ -75,6 +75,10 @@ public class CustomerData {
 		this.isHidden = isHidden;
 	}
 
+	public CustomerData() {
+		
+	}
+
 	/**
 	 * @return the customerId
 	 */
