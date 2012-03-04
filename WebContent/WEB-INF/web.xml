@@ -14,6 +14,22 @@
 		<servlet-name>register</servlet-name>
 		<url-pattern>/register</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>customerInfo</servlet-name>
+		<servlet-class>com.neya.love.finder.pl.CustomerInfoServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>customerInfo</servlet-name>
+		<url-pattern>/customerInfo</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>logIn</servlet-name>
+		<servlet-class>com.neya.love.finder.pl.LogInServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>logIn</servlet-name>
+		<url-pattern>/logIn</url-pattern>
+	</servlet-mapping>
 	<resource-ref>
 		<description>DB Connection</description>
 		<res-ref-name>jdbc/mysqlDB</res-ref-name>

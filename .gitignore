@@ -5,3 +5,8 @@ build
 .settings
 bin
 /doc
+/iOS
+/iOS/LoveFinder
+/iOS/LoveFinder/
+/iOS/LoveFinder/build
+/iOS/LoveFinder/LoveFinder

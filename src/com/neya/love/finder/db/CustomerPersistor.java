@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import com.neya.love.finder.bean.CustomerData;
 import com.neya.love.finder.services.CustomerService;
@@ -34,10 +35,9 @@ public class CustomerPersistor implements CustomerService {
 	 * @author Nikolay Yanev
 	 * @email yanev93@gmail.com
 	 */
-	public boolean addCustomer(CustomerData customer) throws SQLException {
+	public int addCustomer(CustomerData customer) throws SQLException {
 		PreparedStatement stmt = null;
-		boolean isCustomerAdded = false;
-
+		int customerId = 0;
 		try {
 			String sql = "INSERT INTO "
 					+ DBTables.CUSTOMER_TABLE
@@ -45,7 +45,7 @@ public class CustomerPersistor implements CustomerService {
 					+ "VALUES (?,?,?,?,?,?,?,?)";
 
 			// conn = dbManager.getConnection();
-			stmt = conn.prepareStatement(sql);
+			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 			stmt.setInt(1, LFConstants.CUSTOMER_DEFAULT_STATUS);
 			stmt.setString(2, customer.getUsername());
@@ -58,8 +58,13 @@ public class CustomerPersistor implements CustomerService {
 										// convert to short from String)
 			stmt.setInt(8, customer.getIsHidden());
 
-			if (stmt.executeUpdate() == 1)
-				isCustomerAdded = true;
+			if (stmt.executeUpdate() == 1) {
+				ResultSet rs = stmt.getGeneratedKeys();
+
+				if (rs != null && rs.next()) {
+					customerId = rs.getInt(1);
+				}
+			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -67,7 +72,48 @@ public class CustomerPersistor implements CustomerService {
 			closeConnection(stmt);
 		}
 
-		return isCustomerAdded;
+		return customerId;
+	}
+
+	/**
+	 * Login with username and pass
+	 * 
+	 * @param username
+	 *            username of the customer
+	 * @param password
+	 *            password of the customer
+	 * 
+	 * @return return id of the customer
+	 * 
+	 * @author Nikolay Yanev
+	 * @throws SQLException
+	 */
+	public int logIn(String username, String password) throws SQLException {
+		int customerId = 0;
+		// Connection conn = null;
+		PreparedStatement stmt = null;
+
+		try {
+			String sql = "SELECT customer_id FROM "
+					+ DBTables.CUSTOMER_TABLE 
+					+ " WHERE  username = ? AND password = ? ";
+
+			// conn = DBManager.getConnection();
+			stmt = conn.prepareStatement(sql);
+
+			stmt.setString(1, username);
+			stmt.setString(2, StringUtil.md5(password));
+
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				customerId = rs.getInt(1);
+			}
+		} finally {
+			closeConnection(stmt);
+		}
+
+		return customerId;
 	}
 
 	/**

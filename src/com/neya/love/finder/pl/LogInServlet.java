@@ -1,10 +1,3 @@
-/**
- * Servlet that receive information 
- * about customer and add it to the db
- * 
- * @author <a href='mailto:yanev93@gmal.com'>Nikolay Yanev</a>
- * @date 14 Dec 2011
- */
 package com.neya.love.finder.pl;
 
 import java.io.IOException;
@@ -20,44 +13,30 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSON;
 import net.sf.json.JSONSerializer;
 
-import com.neya.love.finder.bean.CustomerData;
 import com.neya.love.finder.db.CustomerPersistor;
 
-public class AddCustomerServlet extends HttpServlet {
+public class LogInServlet extends HttpServlet {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3912995718043333924L;
+	private static final long serialVersionUID = -5699243519242133426L;
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
 		Map<String, String> jsonoObject = new HashMap<String, String>();
-		int age = 0;
-		int isHidden = 1;
+		
 		try {
 			String username = req.getParameter("username");
 			String password = req.getParameter("password");
-			String email = req.getParameter("email");
-			if (req.getParameter("age") != null)
-				age = Integer.parseInt(req.getParameter("age"));
-
-			String country = req.getParameter("country");
-			String city = req.getParameter("city");
-			if (req.getParameter("isHidden") != null)
-				isHidden = Integer.parseInt(req.getParameter("isHidden"));
-
+			
 			if (username != null
 					&& !("".equals(username) && password != null && !(""
 							.equals(password)))) {
 
-				// validCustomerResponseCustomerUtils.isValidUsername
-				CustomerData customer = new CustomerData(username, password,
-						email, age, country, city, isHidden);
-
 				CustomerPersistor customerPersistor = new CustomerPersistor();
-				int customerId = customerPersistor.addCustomer(customer);
+				int customerId = customerPersistor.logIn(username, password);
 				
 				if (customerId > 0) {
 					jsonoObject.put("status_code", "1");
@@ -82,12 +61,13 @@ public class AddCustomerServlet extends HttpServlet {
 		printWriter.println(toJSON(jsonoObject));
 	}
 
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		doPost(req, resp);
 	}
-
+	
 	private JSON toJSON(Map<String, String> jsonMessage) {
 		return JSONSerializer.toJSON(jsonMessage);
 	}

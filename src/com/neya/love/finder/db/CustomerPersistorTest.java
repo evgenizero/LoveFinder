@@ -53,7 +53,7 @@ public class CustomerPersistorTest {
 		when(conn.prepareStatement(sql)).thenReturn(stmt);
 		when(stmt.executeUpdate()).thenReturn(1);
 
-		assertTrue(persistor.addCustomer(customer));
+		assertTrue(persistor.addCustomer(customer) > 0);
 	}
 
 	/**
