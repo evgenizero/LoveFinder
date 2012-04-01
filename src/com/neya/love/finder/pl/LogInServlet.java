@@ -42,7 +42,11 @@ public class LogInServlet extends HttpServlet {
 					jsonoObject.put("status_code", "1");
 					jsonoObject.put("customer_id", String.valueOf(customerId));
 					jsonoObject.put("status-message",
-							"User was added successfully");
+							"User has been logged successfully");
+				} else {
+					jsonoObject.put("status_code", "2");
+					jsonoObject.put("status-message",
+							"No such user");
 				}
 			} else {
 				System.out.println("Error");
