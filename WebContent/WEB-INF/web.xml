@@ -30,6 +30,47 @@
 		<servlet-name>logIn</servlet-name>
 		<url-pattern>/logIn</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>searchUsers</servlet-name>
+		<servlet-class>com.neya.love.finder.pl.SearchUsersServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>searchUsers</servlet-name>
+		<url-pattern>/searchUsers</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>getConversations</servlet-name>
+		<servlet-class>com.neya.love.finder.pl.GetConversationsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>getConversations</servlet-name>
+		<url-pattern>/conversations</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>getMessages</servlet-name>
+		<servlet-class>com.neya.love.finder.pl.GetMessagesServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>getMessages</servlet-name>
+		<url-pattern>/messages</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>uploadImage</servlet-name>
+		<servlet-class>com.neya.love.finder.pl.UploadImageServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>uploadImage</servlet-name>
+		<url-pattern>/upload</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>sendMessage</servlet-name>
+		<servlet-class>com.neya.love.finder.pl.SendMessageServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>sendMessage</servlet-name>
+		<url-pattern>/sendMessage</url-pattern>
+	</servlet-mapping>
+	
 	<resource-ref>
 		<description>DB Connection</description>
 		<res-ref-name>jdbc/mysqlDB</res-ref-name>

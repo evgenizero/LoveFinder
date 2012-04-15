@@ -1,30 +1,32 @@
 package com.neya.love.finder.bean;
 
-import java.util.List;
-
 public class Conversation {
-	private List<Message> messageList;
-	private CustomerData firstUser;
-	private CustomerData secondUser;
-	private ConversationDBLoader conversationLoader;
-
-	public Conversation(CustomerData firstUser, CustomerData secondUser) {
-		conversationLoader = new ConversationDBLoader();
-
-		this.firstUser = firstUser;
-		this.secondUser = secondUser;
-		this.messageList = conversationLoader.loadMessages(firstUser, secondUser);
+	private String userName;
+	private int userId;
+	
+	public Conversation() {
+		
 	}
 	
-	public List<Message> getMessageList() {
-		return messageList;
+	public int getUserId() {
+		return userId;
 	}
 	
-	public CustomerData getFirstUser() {
-		return firstUser;
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 	
-	public CustomerData getSecondUser() {
-		return secondUser;
+	public String getUserName() {
+		return userName;
+	}
+	
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		Conversation conversation = (Conversation) obj;
+		return userId == conversation.getUserId();
 	}
 }

@@ -23,6 +23,7 @@ public class CustomerData {
 	private String city;
 	private int aboutMe;
 	private int isHidden;
+	private String image;
 
 	/**
 	 * @param customerId
@@ -79,6 +80,24 @@ public class CustomerData {
 		
 	}
 
+	public CustomerData(String username, int age, String country,
+			String city) {
+		this.username = username;
+		this.age = age;
+		this.country = country;
+		this.city = city;
+	}
+
+	public CustomerData(int customerId, String username, String email, int age, String country,
+			String city) {
+		this.customerId = customerId;
+		this.username = username;
+		this.email = email;
+		this.age = age;
+		this.country = country;
+		this.city = city;
+	}
+
 	/**
 	 * @return the customerId
 	 */
@@ -91,11 +110,6 @@ public class CustomerData {
 	 *            the customerId to set
 	 */
 	public void setCustomerId(int customerId) {
-		if (customerId < 1) {
-			throw new InvalidParameterException(
-					"Customer id must be greater than 0");
-		}
-
 		this.customerId = customerId;
 	}
 
@@ -111,10 +125,6 @@ public class CustomerData {
 	 *            the status to set
 	 */
 	public void setStatus(int status) {
-		if (status < 0) {
-			throw new InvalidParameterException("Status must be greater than 0");
-		}
-
 		this.status = status;
 	}
 
@@ -177,10 +187,6 @@ public class CustomerData {
 	 *            the age to set
 	 */
 	public void setAge(int age) {
-		if (age < 18 && age > 70) {
-			throw new InvalidParameterException(
-					"Age of the customer must be betwen 18 and 70");
-		}
 		this.age = age;
 	}
 
@@ -242,6 +248,14 @@ public class CustomerData {
 	 */
 	public void setIsHidden(int isHidden) {
 		this.isHidden = isHidden;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 }

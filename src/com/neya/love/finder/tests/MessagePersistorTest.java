@@ -48,14 +48,13 @@ public class MessagePersistorTest {
     @Test
     public void testAddMessage() throws SQLException {
     	
-    	MessagePersistor messagePersistor = MessagePersistor.getInstance();
     	
     	Connection conn = mock(Connection.class);
     	PreparedStatement stmt = mock(PreparedStatement.class);
     	
-    	Message message = new Message("hello", 123l, 5, 6);
+    	MessagePersistor messagePersistor = new MessagePersistor(conn);
+    	Message message = new Message("hello", "Apr 12", 5, 6);
     	
-    	messagePersistor.setConnection(conn);
     	when(conn.prepareStatement(addMessageSql)).thenReturn(stmt);
     	when(stmt.executeUpdate()).thenReturn(1);
     	
@@ -73,12 +72,10 @@ public class MessagePersistorTest {
     @Test
     public void testFindMessageByDate() throws SQLException {
     	
-    	MessagePersistor messagePersistor = MessagePersistor.getInstance();
-    	
     	Connection conn = mock(Connection.class);
     	PreparedStatement stmt = mock(PreparedStatement.class);
     	
-    	messagePersistor.setConnection(conn);
+    	MessagePersistor messagePersistor = new MessagePersistor(conn);
     	
     	ResultSet rs = mock(ResultSet.class);
     	
@@ -92,7 +89,7 @@ public class MessagePersistorTest {
     	when(rs.getInt(3)).thenReturn(5);
     	when(rs.getInt(4)).thenReturn(6);
     	
-    	List<Message> messagesList = messagePersistor.findMessagesByDate(123l, 5);
+    	List<Message> messagesList = messagePersistor.findMessagesByDate("Apr 12", 5);
     	assertEquals(1, messagesList.size());
     }
     
@@ -106,12 +103,11 @@ public class MessagePersistorTest {
     
     @Test
     public void testFindMessageBySenderReceiver() throws SQLException {
-    	MessagePersistor messagePersistor = MessagePersistor.getInstance();
     	
     	Connection conn = mock(Connection.class);
     	PreparedStatement stmt = mock(PreparedStatement.class);
     	
-    	messagePersistor.setConnection(conn);
+    	MessagePersistor messagePersistor = new MessagePersistor(conn);
     	
     	ResultSet rs = mock(ResultSet.class);
     	

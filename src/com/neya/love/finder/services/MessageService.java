@@ -18,6 +18,6 @@ import com.neya.love.finder.bean.Message;
  */
 public interface MessageService extends IService{
 	public boolean addMessage(Message message) throws SQLException;
-	public List<Message> findMessagesByDate(long date, int customerId) throws SQLException;
+	public List<Message> findMessagesByDate(String date, int customerId) throws SQLException;
 	public List<Message> findMessagesBySenderReceiver(int senderId, int receiverId) throws SQLException;
 }

@@ -2,11 +2,14 @@ package com.neya.love.finder.pl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.codehaus.jackson.map.ObjectMapper;
 
 import net.sf.json.JSONSerializer;
 
@@ -22,33 +25,27 @@ public class CustomerInfoServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		doPost(req, resp);
-	}
-
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
 		CustomerData customer = null;
 
 		try {
-			int customerId;
+			HashMap<String, String> jsonObject = new HashMap<String, String>();
+			CustomerPersistor customerPersistor = new CustomerPersistor();
+			customer = customerPersistor.findById(Integer.valueOf(req
+					.getParameter("customerId")));
 
-			if (req.getParameter("customerId") != null) {
-				customerId = Integer.parseInt(req.getParameter("customrId"));
-			} else {
-				customerId = 0;
-			}
+			resp.setStatus(HttpServletResponse.SC_ACCEPTED);
 
-			if (customerId > 0) {
-				CustomerPersistor customerPersistor = new CustomerPersistor();
-				customer = customerPersistor.findById(customerId);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+			ObjectMapper mapper = new ObjectMapper();
+
+			jsonObject.put("user", mapper.writeValueAsString(customer));
+			
+			PrintWriter printWriter = resp.getWriter();
+			printWriter.println(jsonObject);
+			printWriter.println();
+
+		} catch (NumberFormatException e) {
+			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "No id provided or bad formatted");
 		}
-
-		PrintWriter printWriter = resp.getWriter();
-		printWriter.println(JSONSerializer.toJSON(customer));
 	}
 
 }

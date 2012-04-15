@@ -1,33 +1,55 @@
 package com.neya.love.finder.bean;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 public class Message {
 
 	private String message;
-	private Long date;
-	private int messageSender;
-	private int messageReceiver;
+	private String date;
+	private int messageSenderId;
+	private int messageReceiverId;
 
-	public Message(String message, Long date, int messageSender,
-			int messageReceiver) {
+	public Message(String message, String date, int messageSenderId,
+			int messageReceiverId) {
 		this.message = message;
-		this.messageSender = messageSender;
-		this.messageReceiver = messageReceiver;
+		this.messageSenderId = messageSenderId;
+		this.messageReceiverId = messageReceiverId;
 		this.date = date;
 	}
 
+	public Message() {
+		
+	}
+	
 	public String getMessage() {
 		return message;
 	}
 	
-	public Long getDate() {
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	
+	public String getDate() {
 		return date;
 	}
 	
+	public void setDate(String date) {
+		this.date = date;
+	}
+	
 	public int getMessageSenderId() {
-		return messageSender;
+		return messageSenderId;
+	}
+	
+	public void setMessageSenderId(int messageSenderid) {
+		this.messageSenderId = messageSenderid;
 	}
 	
 	public int getMessageReceiverId() {
-		return messageReceiver;
+		return messageReceiverId;
+	}
+	
+	public void setMessageReceiverid(int messageReceiverId) {
+		this.messageReceiverId = messageReceiverId;
 	}
 }

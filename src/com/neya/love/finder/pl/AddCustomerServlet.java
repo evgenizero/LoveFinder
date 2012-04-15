@@ -7,15 +7,30 @@
  */
 package com.neya.love.finder.pl;
 
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.TextNode;
 
 import net.sf.json.JSON;
 import net.sf.json.JSONSerializer;
@@ -33,62 +48,43 @@ public class AddCustomerServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		Map<String, String> jsonoObject = new HashMap<String, String>();
-		int age = 0;
-		int isHidden = 1;
 		try {
-			String username = req.getParameter("username");
-			String password = req.getParameter("password");
-			String email = req.getParameter("email");
-			if (req.getParameter("age") != null)
-				age = Integer.parseInt(req.getParameter("age"));
-
-			String country = req.getParameter("country");
-			String city = req.getParameter("city");
-			if (req.getParameter("isHidden") != null)
-				isHidden = Integer.parseInt(req.getParameter("isHidden"));
-
-			if (username != null
-					&& !("".equals(username) && password != null && !(""
-							.equals(password)))) {
-
-				// validCustomerResponseCustomerUtils.isValidUsername
-				CustomerData customer = new CustomerData(username, password,
-						email, age, country, city, isHidden);
-
-				CustomerPersistor customerPersistor = new CustomerPersistor();
+			ObjectMapper mapper = new ObjectMapper();
+			CustomerData customer = mapper.readValue(req.getParameter("user"),
+					CustomerData.class);
+			CustomerPersistor customerPersistor = new CustomerPersistor();
+			
+			//if (customerPersistor.isFreeUsername(customer.getUsername())) {
 				int customerId = customerPersistor.addCustomer(customer);
-				
 				if (customerId > 0) {
-					jsonoObject.put("status_code", "1");
-					jsonoObject.put("customer_id", String.valueOf(customerId));
-					jsonoObject.put("status-message",
-							"User was added successfully");
+					HashMap<String, String> jsonObject = new HashMap<String, String>();
+					
+					resp.setStatus(HttpServletResponse.SC_CREATED);
+					
+					jsonObject.put("customer_id", String.valueOf(customerId));
+					
+					PrintWriter printWriter = resp.getWriter();
+					printWriter.println(jsonObject);
+					printWriter.println();
+				} else {
+					resp.sendError(
+							HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+							"Error creating user.");
 				}
-			} else {
-				System.out.println("Error");
-				jsonoObject.put("status_code", "0");
-				jsonoObject.put("status-message",
-						"Username or password are not correct!");
-			}
-
-		} catch (NumberFormatException ex) {
-			ex.printStackTrace();
+//			} else {
+//				resp.sendError(HttpServletResponse.SC_CONFLICT,
+//						"Username already exists.");
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			resp.sendError(HttpServletResponse.SC_BAD_REQUEST,
+					"Error parsing user data");
 		}
-
-		PrintWriter printWriter = resp.getWriter();
-		printWriter.println(toJSON(jsonoObject));
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		doPost(req, resp);
-	}
-
-	private JSON toJSON(Map<String, String> jsonMessage) {
-		return JSONSerializer.toJSON(jsonMessage);
 	}
 }
